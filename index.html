@@ -1,0 +1,197 @@
+﻿<!DOCTYPE html>
+<!--
+Random player id    Name in alphabetical order
+12                  Andersson Petter
+5                   Eriksson Jesper
+4                   Erland Joakim
+3                   Johnsson Rickard
+14                  Krejic Marko
+11                  Olofsson Michael
+2                   Olsson Björn
+13                  Pernefors Peter 
+8                   Sin Mihai
+9                   Sjöberg Håkan
+7                   Sundberg Mats
+10                  Yliräisänen Janne
+1                   Mr X
+6                   Miss Y
+
+Mandatory games:
+1 - 2,    1 - 4,    1 - 6,    1 - 8,    1 - 10,   1 - 12,   1 - 14
+3 - 4,    3 - 6,    3 - 8,    3 - 10,   3 - 12,   3 - 14,   3 - 2
+5 - 6,    5 - 8,    5 - 10,   5 - 12,   5 - 14,   5 - 2,    5 - 4
+7 - 8,    7 - 10,   7 - 12,   7 - 14,   7 - 2,    7 - 4,    7 - 6
+9 - 10,   9 - 12,   9 - 14,   9 - 2,    9 - 4,    9 - 6,    9 - 8
+11 - 12,  11 - 14,  11 - 2,   11 - 4,   11 - 6,   11 - 8,   11 - 10
+13 - 14,  13 - 2,   13 - 4,   13 - 6,   13 - 8,   13 - 10,  13 - 12
+-->
+
+<html>
+<head>
+  <title>Futurums bordtennisturnering</title>
+  <style>
+    .vertical-center {
+      min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+      min-height: 100vh; /* These two lines are counted as one :-)       */
+
+      display: flex;
+      align-items: center;
+    }
+  </style>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="taffy-min.js"></script>
+  <script>
+
+var playerDb = {};  
+function getPlayersAjax()
+{
+  return $.getJSON( "players.json" ).done(function(json) {
+    playerDb = TAFFY(json);
+  });
+}
+  
+var gamesDb = {};
+function getGamesAjax()
+{  
+  return $.getJSON( "games.json" ).done(function(json) {
+    gamesDb = TAFFY(json);
+  });
+}
+
+var gameHTMLItem = '<tr>' +
+'<td>ROUND</td>' + 
+'<td>PLAYERA</td>' +
+'<td>PLAYERB</td>' +
+'<td>WINNER</td>' +
+'<td>WO</td>' +
+'</tr>';
+
+$.holdReady( true ); // Don't allow document ready event to fire before we are done with the ajax.
+$.when(getPlayersAjax(), getGamesAjax()).done(function(){
+  $.holdReady( false );  
+});
+
+$(document).ready(function() {
+  var divElement = $('#paneldefault').detach();
+  playerDb().each(function(player, id) 
+  {
+    divElement.clone().appendTo('.panel-group:last');
+    $('.panel-default:last a:last').attr("href", "#collapse" + player.randIndex);
+    $('.panel-default:last a:last').text(player.name);
+    $('.panel-default:last #collapse').attr("id", "collapse" + player.randIndex);
+    $('.panel-default:last #tablebody').attr("id", "tablebody" + player.randIndex);
+  });
+
+  playerDb().each(function(player, id)
+  {
+    gamesDb([{playerA:player.name}, {playerB:player.name}]).order("round").each(function(game, gameId)
+    {
+      if(game.playerA == player.name)
+      {
+        $('#tablebody' + player.randIndex).append(gameHTMLItem.replace("ROUND",game.round).replace("PLAYERA",game.playerA).replace("PLAYERB", game.playerB).replace("WINNER", game.winner).replace("WO", game.wo ? "YES" : ""));
+      }
+      else
+      {
+        $('#tablebody' + player.randIndex).append(gameHTMLItem.replace("ROUND",game.round).replace("PLAYERA",game.playerB).replace("PLAYERB", game.playerA).replace("WINNER", game.winner).replace("WO", game.wo ? "YES" : ""));
+      }
+    });
+    var totalPlayedOrdinaryGames = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:{'!=':""}}, {bonusround:false}, {wo:false} ).count();    
+    var winningsOrdinary = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:player.name}, {bonusround:false}, {wo:false} ).count();
+    var winningsBonus = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:player.name}, {bonusround:true}, {wo:false}).count();
+    var lossesBonus = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:{'!=':player.name}}, {bonusround:true}, {wo:false} ).count();
+    var winningsWO = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:player.name}, {bonusround:false}, {wo:true} ).count();
+
+    var woPoints = 0;
+    if(totalPlayedOrdinaryGames > 0 && winningsWO > 0) 
+    {   
+      woPoints = winningsWO * (winningsOrdinary / totalPlayedOrdinaryGames);
+    } 
+    var winnings = winningsOrdinary + winningsBonus * (1/7) - lossesBonus * (1/10) + woPoints;
+    /*
+    console.log("Losses Bonus: " + player.name)
+    console.log(lossesBonus);
+    console.log("Winnings Bonus: " + player.name)
+    console.log(winningsBonus);
+    console.log("Winnings Ordinary: " + player.name)
+    console.log(winningsOrdinary);
+    */
+    $('#tablebody' + player.randIndex).append(gameHTMLItem.replace("ROUND","POÄNG TOTALT:  " + winnings.toFixed(2)).replace("PLAYERA","").replace("PLAYERB", "").replace("WINNER", "").replace("WO", ""));    
+  });
+});
+
+</script>
+</head>
+<body>
+
+<div class="jumbotron text-center">
+  <h1>Futurums bordtennisturnering</h1>
+  <h2>2017</h2>
+</div>
+<div class="container">
+  <h2>Regler</h2>
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <a data-toggle="collapse" href="#collapsegruppspel">Kvalpspel</a>
+    </h4>
+  </div>
+  <div id="collapsegruppspel" class="panel-collapse collapse">
+      <ul class="list-group">
+        <li class="list-group-item">Kvalspelet planeras pågå februari ut.</li>
+        <li class="list-group-item">Antal set som spelas per match är valfritt och bestäms av spelarna innan påbörjad match. En spelare måste dock utkoras som vinnare (d.v.s. inga oavgjorda matcher).</li>
+        <li class="list-group-item">En vunnen ordinarie match ger en poäng.</li>
+        <li class="list-group-item">En förlorad ordinarie match ger noll poäng.</li>
+        <li class="list-group-item">Den som lämnar WO får noll poäng för matchen.</li>
+        <li class="list-group-item">Om din motspelare lämnar WO så får du snittet av dina genomförda matchers poäng. Exempel: Du har spelat 5 av 7 matcher och vann 3 av dessa 5. Dina motspelare har lämnat WO på två matcher. Din poäng kommer då bli 3/5 + 3/5 = 1.2p för dessa två WO matcher.</li>
+        <li class="list-group-item">Bonusmatcher: Du har möjlighet att spela fler matcher än de utlottade för att på detta sätt tjäna fler poäng. Observera att vid en förlust blir du av med poäng!</li>
+        <li class="list-group-item">En vunnen bonusmatch ger dig 1/7 extra poäng och en förlorad blir du av med 1/10 poäng.</li>
+        <li class="list-group-item">Bonusmatcher får spelas med valfri spelare i turneringen, även de du mött tidigare i en ordinarie match. Du får dock endast spela bonusmatch en gång mot en och samma spelare.</li>
+        <li class="list-group-item">Bonusmatcher får ej rapporteras som WO.</li>
+        <li class="list-group-item">För tillfället finns det en Mr X och Miss Y. Dessa är till för eventuellt sena anmälningar. Om dessa platser inte fylls så räknas de som en WO.</li>
+        <li class="list-group-item">Resultat rapporteras till mig: Janne, via mail eller Lync. Jag vill veta vilka som möttes och vem som vann. Setresultat är ointressant.</li>
+      </ul>
+  </div>
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <a data-toggle="collapse" href="#collapseslutspel">Slutspel</a>
+    </h4>
+  </div>
+  <div id="collapseslutspel" class="panel-collapse collapse">
+      <ul class="list-group">
+        <li class="list-group-item">Reglerna för slutspelet kommer att presenteras längre fram.</li>
+      </ul>
+  </div>
+    <div class="panel-group">
+    <h2>Matcher</h2>
+      <div id="paneldefault" class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" href="#collapse"></a>
+          </h4>
+        </div>
+          <div id="collapse" class="panel-collapse collapse">
+            <table class="table table-condensed">
+              <thead>
+                <tr>
+                  <th>Omgång</th>
+                  <th>Spelare A</th>
+                  <th>Spelare B</th>
+                  <th>Vinnare</th>
+                  <th>WO</th>
+                </tr>
+              </thead>
+              <tbody id="tablebody">
+                <!-- Dynamic content -->
+              </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+</body>
+</html>
