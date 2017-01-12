@@ -70,6 +70,7 @@ var gameHTMLItem = '<tr>' +
 '<td>WO</td>' +
 '</tr>';
 
+$.ajaxSetup({ cache: false });
 $.holdReady( true ); // Don't allow document ready event to fire before we are done with the ajax.
 $.when(getPlayersAjax(), getGamesAjax()).done(function(){
   $.holdReady( false );  
