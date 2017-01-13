@@ -8,7 +8,7 @@ Random player id    Name in alphabetical order
 14                  Krejic Marko
 11                  Olofsson Michael
 2                   Olsson Björn
-13                  Pernefors Peter 
+13                  Pernefors Peter
 8                   Sin Mihai
 9                   Sjöberg Håkan
 7                   Sundberg Mats
@@ -46,24 +46,24 @@ Mandatory games:
   <script src="taffy-min.js"></script>
   <script>
 
-var playerDb = {};  
+var playerDb = {};
 function getPlayersAjax()
 {
   return $.getJSON( "players.json" ).done(function(json) {
     playerDb = TAFFY(json);
   });
 }
-  
+
 var gamesDb = {};
 function getGamesAjax()
-{  
+{
   return $.getJSON( "games.json" ).done(function(json) {
     gamesDb = TAFFY(json);
   });
 }
 
 var gameHTMLItem = '<tr>' +
-'<td>ROUND</td>' + 
+'<td>ROUND</td>' +
 '<td>PLAYERA</td>' +
 '<td>PLAYERB</td>' +
 '<td>WINNER</td>' +
@@ -73,12 +73,12 @@ var gameHTMLItem = '<tr>' +
 $.ajaxSetup({ cache: false });
 $.holdReady( true ); // Don't allow document ready event to fire before we are done with the ajax.
 $.when(getPlayersAjax(), getGamesAjax()).done(function(){
-  $.holdReady( false );  
+  $.holdReady( false );
 });
 
 $(document).ready(function() {
   var divElement = $('#paneldefault').detach();
-  playerDb().each(function(player, id) 
+  playerDb().each(function(player, id)
   {
     divElement.clone().appendTo('.panel-group:last');
     $('.panel-default:last a:last').attr("href", "#collapse" + player.randIndex);
@@ -87,6 +87,7 @@ $(document).ready(function() {
     $('.panel-default:last #tablebody').attr("id", "tablebody" + player.randIndex);
   });
 
+  var pointsTable = [];
   playerDb().each(function(player, id)
   {
     gamesDb([{playerA:player.name}, {playerB:player.name}]).order("round").each(function(game, gameId)
@@ -100,17 +101,18 @@ $(document).ready(function() {
         $('#tablebody' + player.randIndex).append(gameHTMLItem.replace("ROUND",game.round).replace("PLAYERA",game.playerB).replace("PLAYERB", game.playerA).replace("WINNER", game.winner).replace("WO", game.wo ? "YES" : ""));
       }
     });
-    var totalPlayedOrdinaryGames = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:{'!=':""}}, {bonusround:false}, {wo:false} ).count();    
+    var totalPlayedOrdinaryGames = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:{'!=':""}}, {bonusround:false}, {wo:false} ).count();
     var winningsOrdinary = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:player.name}, {bonusround:false}, {wo:false} ).count();
     var winningsBonus = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:player.name}, {bonusround:true}, {wo:false}).count();
+    var totalPlayedBonus = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:{'!=':""}}, {bonusround:true}, {wo:false}).count();
     var lossesBonus = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:{'!=':player.name}}, {bonusround:true}, {wo:false} ).count();
     var winningsWO = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:player.name}, {bonusround:false}, {wo:true} ).count();
 
     var woPoints = 0;
-    if(totalPlayedOrdinaryGames > 0 && winningsWO > 0) 
-    {   
+    if(totalPlayedOrdinaryGames > 0 && winningsWO > 0)
+    {
       woPoints = winningsWO * (winningsOrdinary / totalPlayedOrdinaryGames);
-    } 
+    }
     var winnings = winningsOrdinary + winningsBonus * (1/7) - lossesBonus * (1/10) + woPoints;
     /*
     console.log("Losses Bonus: " + player.name)
@@ -120,8 +122,21 @@ $(document).ready(function() {
     console.log("Winnings Ordinary: " + player.name)
     console.log(winningsOrdinary);
     */
-    $('#tablebody' + player.randIndex).append(gameHTMLItem.replace("ROUND","POÄNG TOTALT:  " + winnings.toFixed(2)).replace("PLAYERA","").replace("PLAYERB", "").replace("WINNER", "").replace("WO", ""));    
+    $('#tablebody' + player.randIndex).append(gameHTMLItem.replace("ROUND","POÄNG TOTALT:  " + winnings.toFixed(2)).replace("PLAYERA","").replace("PLAYERB", "").replace("WINNER", "").replace("WO", ""));
+    pointsTable.push({ 'player': player.name, 'winningsOrdinary': winningsOrdinary,
+      'totalPlayedOrdinaryGames': totalPlayedOrdinaryGames, 'winningsBonus': winningsBonus,
+      'totalPlayedBonus': totalPlayedBonus, 'winnings': winnings});
   });
+
+  pointsTable.sort(function(a, b) { return b['winnings'] - a['winnings'] });
+  for (var i = 0; i < pointsTable.length; i++) {
+    $('#tablepoints').append('<tr><td>' +pointsTable[i]['player'] +'</td><td>'
+      +pointsTable[i]['winningsOrdinary'] +'</td><td>'
+      +pointsTable[i]['totalPlayedOrdinaryGames'] +'</td><td>'
+      +pointsTable[i]['winningsBonus'] +'</td><td>'
+      +pointsTable[i]['totalPlayedBonus'] +'</td><td>'
+      +pointsTable[i]['winnings'].toFixed(2) +'</td></tr>');
+  }
 });
 </script>
 </head>
@@ -150,7 +165,7 @@ $(document).ready(function() {
         <li class="list-group-item">Matcherna (ordinarie och bonus) får spelas i vilken ordning man själv föredrar. Försök ändå att inte lämna alla matcher till sista veckan.</li>
         <li class="list-group-item">Den som lämnar WO får noll poäng för matchen.</li>
         <li class="list-group-item">Bonusmatcher kan ej rapporteras som WO.</li>
-        <li class="list-group-item">Det blir implicit WO vid no-show (såvida den förfördelade parten inte säger något annat).</li> 
+        <li class="list-group-item">Det blir implicit WO vid no-show (såvida den förfördelade parten inte säger något annat).</li>
         <li class="list-group-item">Den som måste avboka en inplanerad match har ansvaret för att hitta en ny speltid som passar båda. Om detta inte lyckas så blir det WO.</li>
         <li class="list-group-item">Om din motspelare lämnar WO så får du snittet av dina genomförda matchers poäng. Exempel: Du har spelat 5 av 7 matcher och vann 3 av dessa 5. Dina motspelare har lämnat WO på två matcher. Din poäng kommer då bli 3/5 + 3/5 = 1.2p för dessa två WO matcher.</li>
         <li class="list-group-item">För tillfället finns det en Mr X och Miss Y. Dessa är till för eventuellt sena anmälningar. Om dessa platser inte fylls så räknas de som en WO.</li>
@@ -177,32 +192,49 @@ $(document).ready(function() {
         <li class="list-group-item"><iframe width="854" height="480" src="https://www.youtube.com/embed/TvOvy66PxOg" frameborder="0" allowfullscreen></iframe></li>
     </ul>
   </div>
-    <div class="panel-group">
+  <div class="panel-group">
     <h2>Matcher</h2>
-      <div id="paneldefault" class="panel panel-default">
-        <div class="panel-heading">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" href="#collapse"></a>
-          </h4>
-        </div>
-          <div id="collapse" class="panel-collapse collapse">
-            <table class="table table-condensed">
-              <thead>
-                <tr>
-                  <th>Omgång</th>
-                  <th>Spelare A</th>
-                  <th>Spelare B</th>
-                  <th>Vinnare</th>
-                  <th>WO</th>
-                </tr>
-              </thead>
-              <tbody id="tablebody">
-                <!-- Dynamic content -->
-              </tbody>
-          </table>
-        </div>
+    <div id="paneldefault" class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" href="#collapse"></a>
+        </h4>
+      </div>
+      <div id="collapse" class="panel-collapse collapse">
+        <table class="table table-condensed">
+          <thead>
+            <tr>
+              <th>Omgång</th>
+              <th>Spelare A</th>
+              <th>Spelare B</th>
+              <th>Vinnare</th>
+              <th>WO</th>
+            </tr>
+          </thead>
+          <tbody id="tablebody">
+            <!-- Dynamic content -->
+          </tbody>
+        </table>
       </div>
     </div>
+  </div>
+  <div class="well">
+    <h2>Poängtabell</h2>
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th>Spelare</th>
+          <th>Vunna matcher</th>
+          <th>Spelade matcher</th>
+          <th>Vunna bonusmatcher</th>
+          <th>Spelade bonusmatcher</th>
+          <th>Poäng</th>
+        </tr>
+      </thead>
+      <tbody id="tablepoints">
+        <!-- Dynamic content -->
+      </tbody>
+    </table>
   </div>
 </div>
 </body>
