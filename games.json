@@ -56,5 +56,6 @@
 {"round": 7, "playerA": "Pernefors Peter", "playerB": "Andersson Petter", "winner": "Pernefors Peter", "bonusround": false, "wo": false},
 
 {"round": "Bonus", "playerA": "Olsson Björn", "playerB": "Andersson Petter", "winner": "Olsson Björn", "bonusround": true, "wo": false},
-{"round": "Bonus", "playerA": "Eriksson Jesper", "playerB": "Olsson Björn", "winner": "Olsson Björn", "bonusround": true, "wo": false}
+{"round": "Bonus", "playerA": "Eriksson Jesper", "playerB": "Olsson Björn", "winner": "Olsson Björn", "bonusround": true, "wo": false},
+{"round": "Bonus", "playerA": "Krejic Marko", "playerB": "Olsson Björn", "winner": "Olsson Björn", "bonusround": true, "wo": false}
 ]
