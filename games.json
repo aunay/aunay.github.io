@@ -1,11 +1,11 @@
 [
-{"round": 1, "playerA": "Mr X", "playerB": "Olsson Björn", "winner": "", "bonusround": false, "wo": false},
-{"round": 2, "playerA": "Mr X", "playerB": "Erland Joakim", "winner": "", "bonusround": false, "wo": false},
-{"round": 3, "playerA": "Mr X", "playerB": "Fält Kari", "winner": "", "bonusround": false, "wo": false},
-{"round": 4, "playerA": "Mr X", "playerB": "Sin Mihai", "winner": "", "bonusround": false, "wo": false},
-{"round": 5, "playerA": "Mr X", "playerB": "Yliräisänen Janne", "winner": "", "bonusround": false, "wo": false},
-{"round": 6, "playerA": "Mr X", "playerB": "Andersson Petter", "winner": "", "bonusround": false, "wo": false},
-{"round": 7, "playerA": "Mr X", "playerB": "Krejic Marko", "winner": "", "bonusround": false, "wo": false},
+{"round": 1, "playerA": "Martinsson Christian", "playerB": "Olsson Björn", "winner": "", "bonusround": false, "wo": false},
+{"round": 2, "playerA": "Martinsson Christian", "playerB": "Erland Joakim", "winner": "", "bonusround": false, "wo": false},
+{"round": 3, "playerA": "Martinsson Christian", "playerB": "Fält Kari", "winner": "", "bonusround": false, "wo": false},
+{"round": 4, "playerA": "Martinsson Christian", "playerB": "Sin Mihai", "winner": "", "bonusround": false, "wo": false},
+{"round": 5, "playerA": "Martinsson Christian", "playerB": "Yliräisänen Janne", "winner": "", "bonusround": false, "wo": false},
+{"round": 6, "playerA": "Martinsson Christian", "playerB": "Andersson Petter", "winner": "", "bonusround": false, "wo": false},
+{"round": 7, "playerA": "Martinsson Christian", "playerB": "Krejic Marko", "winner": "", "bonusround": false, "wo": false},
 
 {"round": 1, "playerA": "Jonsson Rickard", "playerB": "Erland Joakim", "winner": "", "bonusround": false, "wo": false},
 {"round": 2, "playerA": "Jonsson Rickard", "playerB": "Fält Kari", "winner": "", "bonusround": false, "wo": false},
