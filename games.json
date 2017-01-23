@@ -58,5 +58,6 @@
 {"round": "Bonus", "playerA": "Olsson Björn", "playerB": "Andersson Petter", "winner": "Olsson Björn", "bonusround": true, "wo": false},
 {"round": "Bonus", "playerA": "Eriksson Jesper", "playerB": "Olsson Björn", "winner": "Olsson Björn", "bonusround": true, "wo": false},
 {"round": "Bonus", "playerA": "Krejic Marko", "playerB": "Olsson Björn", "winner": "Olsson Björn", "bonusround": true, "wo": false},
-{"round": "Bonus", "playerA": "Krejic Marko", "playerB": "Andersson Petter", "winner": "Andersson Petter", "bonusround": true, "wo": false}
+{"round": "Bonus", "playerA": "Krejic Marko", "playerB": "Andersson Petter", "winner": "Andersson Petter", "bonusround": true, "wo": false},
+{"round": "Bonus", "playerA": "Krejic Marko", "playerB": "Eriksson Jesper", "winner": "Eriksson Jesper", "bonusround": true, "wo": false}
 ]
