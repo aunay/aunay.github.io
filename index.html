@@ -13,6 +13,17 @@ Mandatory games:
 <html>
 <head>
   <title>Futurums bordtennisturnering</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="taffy-min.js"></script>
+  <script type="text/javascript" src="jquery-3.1.1.min.js"></script>
+  <script type="text/javascript" src="jquery.bracket.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="jquery.bracket.min.css" />
+  <script type="text/javascript" src="la_grande_finale.js"></script>
+
   <style>
     .vertical-center {
       min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
@@ -21,13 +32,11 @@ Mandatory games:
       display: flex;
       align-items: center;
     }
+    
+    .force_size_to_100_percent {
+      font-size: 100%;
+    }
   </style>
-
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="taffy-min.js"></script>
   <script>
 
 var playerDb = {};
@@ -130,7 +139,7 @@ $(document).ready(function() {
   <h1>Futurums bordtennisturnering</h1>
   <h2>2017</h2>
 </div>
-<div class="container">
+<div class="container-fluid">
   <h2>Regler</h2>
   <div class="panel-heading">
     <h4 class="panel-title">
@@ -221,6 +230,9 @@ $(document).ready(function() {
         <!-- Dynamic content -->
       </tbody>
     </table>
+  </div>
+  <h2>Slutspel (wip)</h2>
+  <div id="endgame-show" class="force_size_to_100_percent">
   </div>
 </div>
 </body>
