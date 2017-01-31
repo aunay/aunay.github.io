@@ -1,21 +1,5 @@
 ﻿<!DOCTYPE html>
 <!--
-Random player id    Name in alphabetical order
-12                  Andersson Petter
-5                   Eriksson Jesper
-4                   Erland Joakim
-3                   Johnsson Rickard
-14                  Krejic Marko
-11                  Olofsson Michael
-2                   Olsson Björn
-13                  Pernefors Peter
-8                   Sin Mihai
-9                   Sjöberg Håkan
-7                   Sundberg Mats
-10                  Yliräisänen Janne
-1                   Mr X
-6                   Miss Y
-
 Mandatory games:
 1 - 2,    1 - 4,    1 - 6,    1 - 8,    1 - 10,   1 - 12,   1 - 14
 3 - 4,    3 - 6,    3 - 8,    3 - 10,   3 - 12,   3 - 14,   3 - 2
@@ -70,7 +54,7 @@ var gameHTMLItem = '<tr>' +
 '<td>WO</td>' +
 '</tr>';
 
-$.ajaxSetup({ cache: false });
+$.ajaxSetup({ cache: false }); // Important to avoid local caching of old results.
 $.holdReady( true ); // Don't allow document ready event to fire before we are done with the ajax.
 $.when(getPlayersAjax(), getGamesAjax()).done(function(){
   $.holdReady( false );
@@ -94,11 +78,11 @@ $(document).ready(function() {
     {
       if(game.playerA == player.name)
       {
-        $('#tablebody' + player.randIndex).append(gameHTMLItem.replace("ROUND",game.round).replace("PLAYERA",game.playerA).replace("PLAYERB", game.playerB).replace("WINNER", game.winner).replace("WO", game.wo ? "YES" : ""));
+        $('#tablebody' + player.randIndex).append(gameHTMLItem.replace("ROUND", game.bonusround ? "Bonus" : game.round).replace("PLAYERA",game.playerA).replace("PLAYERB", game.playerB).replace("WINNER", game.winner).replace("WO", game.wo ? "YES" : ""));
       }
       else
       {
-        $('#tablebody' + player.randIndex).append(gameHTMLItem.replace("ROUND",game.round).replace("PLAYERA",game.playerB).replace("PLAYERB", game.playerA).replace("WINNER", game.winner).replace("WO", game.wo ? "YES" : ""));
+        $('#tablebody' + player.randIndex).append(gameHTMLItem.replace("ROUND", game.bonusround ? "Bonus" : game.round).replace("PLAYERA",game.playerB).replace("PLAYERB", game.playerA).replace("WINNER", game.winner).replace("WO", game.wo ? "YES" : ""));
       }
     });
     var totalPlayedOrdinaryGames = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:{'!=':""}}, {bonusround:false}, {wo:false} ).count();
