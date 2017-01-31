@@ -29,7 +29,7 @@
 {"round": 4, "playerA": "Sundberg Mats", "playerB": "Krejic Marko", "winner": "Sundberg Mats", "bonusround": false, "wo": false},
 {"round": 5, "playerA": "Sundberg Mats", "playerB": "Olsson Björn", "winner": "Sundberg Mats", "bonusround": false, "wo": false},
 {"round": 6, "playerA": "Sundberg Mats", "playerB": "Erland Joakim", "winner": "", "bonusround": false, "wo": false},
-{"round": 7, "playerA": "Sundberg Mats", "playerB": "Fält Kari", "winner": "", "bonusround": false, "wo": false},
+{"round": 7, "playerA": "Sundberg Mats", "playerB": "Fält Kari", "winner": "Sundberg Mats", "bonusround": false, "wo": false},
 
 {"round": 1, "playerA": "Sjögren Håkan", "playerB": "Yliräisänen Janne", "winner": "Yliräisänen Janne", "bonusround": false, "wo": false},
 {"round": 2, "playerA": "Sjögren Håkan", "playerB": "Andersson Petter", "winner": "Sjögren Håkan", "bonusround": false, "wo": false},
@@ -41,7 +41,7 @@
 
 {"round": 1, "playerA": "Olofsson Michael", "playerB": "Andersson Petter", "winner": "", "bonusround": false, "wo": false},
 {"round": 2, "playerA": "Olofsson Michael", "playerB": "Krejic Marko", "winner": "Olofsson Michael", "bonusround": false, "wo": false},
-{"round": 3, "playerA": "Olofsson Michael", "playerB": "Olsson Björn", "winner": "", "bonusround": false, "wo": false},
+{"round": 3, "playerA": "Olofsson Michael", "playerB": "Olsson Björn", "winner": "Olsson Björn", "bonusround": false, "wo": false},
 {"round": 4, "playerA": "Olofsson Michael", "playerB": "Erland Joakim", "winner": "", "bonusround": false, "wo": false},
 {"round": 5, "playerA": "Olofsson Michael", "playerB": "Fält Kari", "winner": "", "bonusround": false, "wo": false},
 {"round": 6, "playerA": "Olofsson Michael", "playerB": "Sin Mihai", "winner": "", "bonusround": false, "wo": false},
@@ -61,5 +61,6 @@
 {"round": "Bonus", "playerA": "Krejic Marko", "playerB": "Andersson Petter", "winner": "Andersson Petter", "bonusround": true, "wo": false},
 {"round": "Bonus", "playerA": "Krejic Marko", "playerB": "Eriksson Jesper", "winner": "Eriksson Jesper", "bonusround": true, "wo": false},
 {"round": "Bonus", "playerA": "Jonsson Rickard", "playerB": "Krejic Marko", "winner": "Jonsson Rickard", "bonusround": true, "wo": false},
-{"round": "Bonus", "playerA": "Olsson Björn", "playerB": "Fält Kari", "winner": "Olsson Björn", "bonusround": true, "wo": false}
+{"round": "Bonus", "playerA": "Olsson Björn", "playerB": "Fält Kari", "winner": "Olsson Björn", "bonusround": true, "wo": false},
+{"round": "Bonus", "playerA": "Olofsson Michael", "playerB": "Sundberg Mats", "winner": "Sundberg Mats", "bonusround": true, "wo": false}
 ]
