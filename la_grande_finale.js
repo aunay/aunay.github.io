@@ -1,26 +1,3 @@
-var customData = {
-    teams : [
-    [{name: "Rank #1", flag: 'saab'}, null],
-    [{name: "Rank #9", flag: 'saab'}, {name: "Rank #8", flag: 'combitech'}],
-    [{name: "Rank #5", flag: 'saab'}, {name: "Rank #12", flag: 'combitech'}],
-    [{name: "Rank #13", flag: 'saab'}, {name: "Rank #4", flag: 'combitech'}],
-    [{name: "Rank #3", flag: 'saab'}, {name: "Rank #14", flag: 'combitech'}],
-    [{name: "Rank #6", flag: 'saab'}, {name: "Rank #11", flag: 'combitech'}],
-    [{name: "Rank #7", flag: 'saab'}, {name: "Rank #10", flag: 'combitech'}],
-    [{name: "Rank #2", flag: 'saab'}, null]
-    ],
-  results : [
-    [ /* WINNER BRACKET */
-      [[], [], [], [0,1], [1,0], [], [], []],
-    ], 
-    [         /* LOSER BRACKET */
-    ], 
-    [         /* FINALS */
-    
-    ]
-  ]
-  }
- 
 /* Edit function is called when team label is clicked */
 function edit_fn(container, data, doneCb) {
  
@@ -39,30 +16,18 @@ function edit_fn(container, data, doneCb) {
 function render_fn(container, data, score, state) {
   switch(state) {
     case "empty-bye":
-      container.append("BYE");
+      container.append("");
       return;
     case "empty-tbd":
-      container.append("Ej klart");
+      container.append("Ej avgjort");
       return;
  
     case "entry-no-score":
     case "entry-default-win":
     case "entry-complete":
-      container.append(data.name);    
+      container.append(data.name);
       return;
   }
 }
  
 
-$(function() {
-  $('div#endgame-show').bracket({
-    init: customData,
-    disableToolbar: true,
-    disableTeamEdit: true,
-    teamWidth: 120,
-    scoreWidth: 20,
-    matchMargin: 50,
-    save: function(){}, /* without save() labels are disabled */
-    decorator: {edit: edit_fn,
-                render: render_fn}})
-  })

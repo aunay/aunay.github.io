@@ -130,6 +130,34 @@ $(document).ready(function() {
       +pointsTable[i]['totalPlayedBonus'] +'</td><td>'
       +pointsTable[i]['winnings'].toFixed(2) +'</td></tr>');
   }
+  
+  $.getJSON( "endgame.json" ).done(function(json) {
+    var dataStr = JSON.stringify(json);
+    for (var i = 0; i < pointsTable.length; i++) {
+      dataStr = dataStr.replace("Rank #" + (i+1), pointsTable[i]['player']);
+      //var playerRecord = playerDb({name:pointsTable[i]['player']}).first();
+      //dataStr = dataStr.replace((i+1) + "_flag_placeholder", playerRecord.company);    
+      
+    }
+    
+    customData = JSON.parse(dataStr);
+    console.log(customData);
+    
+    $(function() {
+    $('div#endgame-show').bracket({
+      init: customData,
+      disableToolbar: true,
+      disableTeamEdit: true,
+      teamWidth: 150,
+      scoreWidth: 20,
+      matchMargin: 50,
+      save: function(){}, /* without save() labels are disabled */
+      decorator: {edit: edit_fn,
+                  render: render_fn}})
+    })
+  });
+
+ 
 });
 </script>
 </head>
@@ -147,23 +175,22 @@ $(document).ready(function() {
     </h4>
   </div>
   <div id="collapsegruppspel" class="panel-collapse collapse">
-      <ul class="list-group">
-        <li class="list-group-item">Kvalspelet planeras pågå februari ut.</li>
-        <li class="list-group-item">Antal set som spelas per match är valfritt och bestäms av spelarna innan påbörjad match. En spelare måste dock utkoras som vinnare (d.v.s. inga oavgjorda matcher).</li>
-        <li class="list-group-item">En vunnen ordinarie match ger en poäng.</li>
-        <li class="list-group-item">En förlorad ordinarie match ger noll poäng.</li>
-        <li class="list-group-item">Bonusmatcher: Du har möjlighet att spela fler matcher än de utlottade för att på detta sätt tjäna fler poäng. Observera att vid en förlust blir du av med poäng!</li>
-        <li class="list-group-item">En vunnen bonusmatch ger dig 1/7 extra poäng och en förlorad blir du av med 1/10 poäng.</li>
-        <li class="list-group-item">Bonusmatcher får spelas med valfri spelare i turneringen, även de du mött tidigare i en ordinarie match. Du får dock endast spela bonusmatch en gång mot en och samma spelare.</li>
-        <li class="list-group-item">Matcherna (ordinarie och bonus) får spelas i vilken ordning man själv föredrar. Försök ändå att inte lämna alla matcher till sista veckan.</li>
-        <li class="list-group-item">Den som lämnar WO får noll poäng för matchen.</li>
-        <li class="list-group-item">Bonusmatcher kan ej rapporteras som WO.</li>
-        <li class="list-group-item">Det blir implicit WO vid no-show (såvida den förfördelade parten inte säger något annat).</li>
-        <li class="list-group-item">Den som måste avboka en inplanerad match har ansvaret för att hitta en ny speltid som passar båda. Om detta inte lyckas så blir det WO.</li>
-        <li class="list-group-item">Om din motspelare lämnar WO så får du snittet av dina genomförda matchers poäng. Exempel: Du har spelat 5 av 7 matcher och vann 3 av dessa 5. Dina motspelare har lämnat WO på två matcher. Din poäng kommer då bli 3/5 + 3/5 = 1.2p för dessa två WO matcher.</li>
-        <li class="list-group-item">För tillfället finns det en Mr X och Miss Y. Dessa är till för eventuellt sena anmälningar. Om dessa platser inte fylls så räknas de som en WO.</li>
-        <li class="list-group-item">Resultat rapporteras till mig: Janne, via mail eller Lync. Jag vill veta vilka som möttes och vem som vann. Setresultat är ointressant.</li>
-      </ul>
+    <div class="well">
+      Kvalspelet planeras pågå februari ut.
+      <br/><br/>Antal set som spelas per match är valfritt och bestäms av spelarna innan påbörjad match. En spelare måste dock utkoras som vinnare (d.v.s. inga oavgjorda matcher).
+      <br/><br/>En vunnen ordinarie match ger en poäng.
+      <br/><br/>En förlorad ordinarie match ger noll poäng.
+      <br/><br/>Bonusmatcher: Du har möjlighet att spela fler matcher än de utlottade för att på detta sätt tjäna fler poäng. Observera att vid en förlust blir du av med poäng!
+      <br/><br/>En vunnen bonusmatch ger dig 1/7 extra poäng och en förlorad blir du av med 1/10 poäng.
+      <br/><br/>Bonusmatcher får spelas med valfri spelare i turneringen, även de du mött tidigare i en ordinarie match. Du får dock endast spela bonusmatch en gång mot en och samma spelare.
+      <br/><br/>Matcherna (ordinarie och bonus) får spelas i vilken ordning man själv föredrar. Försök ändå att inte lämna alla matcher till sista veckan.
+      <br/><br/>Den som lämnar WO får noll poäng för matchen.
+      <br/><br/>Bonusmatcher kan ej rapporteras som WO.
+      <br/><br/>Det blir implicit WO vid no-show (såvida den förfördelade parten inte säger något annat).
+      <br/><br/>Den som måste avboka en inplanerad match har ansvaret för att hitta en ny speltid som passar båda. Om detta inte lyckas så blir det WO.
+      <br/><br/>Om din motspelare lämnar WO så får du snittet av dina genomförda matchers poäng. Exempel: Du har spelat 5 av 7 matcher och vann 3 av dessa 5. Dina motspelare har lämnat WO på två matcher. Din poäng kommer då bli 3/5 + 3/5 = 1.2p för dessa två WO matcher.
+      <br/><br/>Resultat rapporteras till mig: Janne, via mail eller Lync. Jag vill veta vilka som möttes och vem som vann. Setresultat är ointressant.
+    </div>  
   </div>
   <div class="panel-heading">
     <h4 class="panel-title">
@@ -171,9 +198,13 @@ $(document).ready(function() {
     </h4>
   </div>
   <div id="collapseslutspel" class="panel-collapse collapse">
-      <ul class="list-group">
-        <li class="list-group-item">Reglerna för slutspelet kommer att presenteras längre fram.</li>
-      </ul>
+    <div class="well">
+      Slutspelet spelas som en dubbelelimineringsturnering. 
+      <br/><br/>Detta innebär att det finns en övre och en nedre -"bracket". De som spelar i den övre får en extra chans ifall de förlorar en match genom att placeras i den nedre bracketen. Vid ytterligare en förlust (nu i den nedre bracketen) åker man dock ur turneringen, d.v.s. här gäller direkteliminering. Finalen kommer med denna spelvariant därför bli mellan vinnaren i den övre och den lägre bracketen.
+      <br/><br/>Defaultvinster har getts till spelare som placerat sig 1-6 i kvalspelet, vilket i sin tur innebär att de 4 spelare som placerade sig sämst i kvalspelet får börja i den nedre bracketen.
+      <br/><br/>Medan kvalspelet pågår så uppdateras spelschemat löpande och räknas ut från gällande poängställning. 
+      <br/><br/>Tips! Du kan manipulera matchresultaten för att på detta sätt simulera olika scenarion (t.ex. din egen triumfartade seger). Resultaten återställs vid en omladdning av sidan.  
+    </div>
   </div>
   <div class="panel-heading">
     <h4 class="panel-title">
@@ -232,8 +263,8 @@ $(document).ready(function() {
     </table>
   </div>
   <br/>
-  <h2>Slutspel (wip)</h2>
-  <div id="endgame-show"></div>
+  <h2>Slutspel</h2>
+  <div id="endgame-show"/>
 </div>
 </body>
 </html>
