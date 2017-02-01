@@ -39,16 +39,16 @@ function edit_fn(container, data, doneCb) {
 function render_fn(container, data, score, state) {
   switch(state) {
     case "empty-bye":
-      //container.append("Gräddfilen")
+      container.append("BYE");
       return;
     case "empty-tbd":
-      container.append("Ej klart")
+      container.append("Ej klart");
       return;
  
     case "entry-no-score":
     case "entry-default-win":
     case "entry-complete":
-      container.append(data.name)      
+      container.append(data.name);    
       return;
   }
 }
