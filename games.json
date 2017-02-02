@@ -23,7 +23,7 @@
 {"round": 6, "playerA": "Eriksson Jesper", "playerB": "Olsson Björn", "winner": "Olsson Björn", "bonusround": false, "wo": false},
 {"round": 7, "playerA": "Eriksson Jesper", "playerB": "Erland Joakim", "winner": "", "bonusround": false, "wo": false},
 
-{"round": 1, "playerA": "Sundberg Mats", "playerB": "Sin Mihai", "winner": "", "bonusround": false, "wo": false},
+{"round": 1, "playerA": "Sundberg Mats", "playerB": "Sin Mihai", "winner": "Sundberg Mats", "bonusround": false, "wo": false},
 {"round": 2, "playerA": "Sundberg Mats", "playerB": "Yliräisänen Janne", "winner": "Yliräisänen Janne", "bonusround": false, "wo": false},
 {"round": 3, "playerA": "Sundberg Mats", "playerB": "Andersson Petter", "winner": "Sundberg Mats", "bonusround": false, "wo": false},
 {"round": 4, "playerA": "Sundberg Mats", "playerB": "Krejic Marko", "winner": "Sundberg Mats", "bonusround": false, "wo": false},
