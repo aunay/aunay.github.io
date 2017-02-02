@@ -135,8 +135,8 @@ $(document).ready(function() {
     var dataStr = JSON.stringify(json);
     for (var i = 0; i < pointsTable.length; i++) {
       dataStr = dataStr.replace("Rank #" + (i+1), pointsTable[i]['player']);
-      //var playerRecord = playerDb({name:pointsTable[i]['player']}).first();
-      //dataStr = dataStr.replace((i+1) + "_flag_placeholder", playerRecord.company);    
+      var playerRecord = playerDb({name:pointsTable[i]['player']}).first();
+      dataStr = dataStr.replace("flag_placeholder_" + (i+1), playerRecord.company);    
       
     }
     
@@ -148,7 +148,7 @@ $(document).ready(function() {
       init: customData,
       disableToolbar: true,
       disableTeamEdit: true,
-      teamWidth: 150,
+      teamWidth: 175,
       scoreWidth: 20,
       matchMargin: 50,
       save: function(){}, /* without save() labels are disabled */

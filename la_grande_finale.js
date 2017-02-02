@@ -25,7 +25,7 @@ function render_fn(container, data, score, state) {
     case "entry-no-score":
     case "entry-default-win":
     case "entry-complete":
-      container.append(data.name);
+      container.append('<img src="'+data.flag+'.png" /> ').append(data.name);
       return;
   }
 }
