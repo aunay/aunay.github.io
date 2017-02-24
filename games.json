@@ -15,7 +15,7 @@
 {"round": 6, "playerA": "Jonsson Rickard", "playerB": "Krejic Marko", "winner": "Jonsson Rickard", "bonusround": false, "wo": false},
 {"round": 7, "playerA": "Jonsson Rickard", "playerB": "Olsson Björn", "winner": "", "bonusround": false, "wo": false},
 
-{"round": 1, "playerA": "Eriksson Jesper", "playerB": "Fält Kari", "winner": "", "bonusround": false, "wo": false},
+{"round": 1, "playerA": "Eriksson Jesper", "playerB": "Fält Kari", "winner": "Eriksson Jesper", "bonusround": false, "wo": false},
 {"round": 2, "playerA": "Eriksson Jesper", "playerB": "Sin Mihai", "winner": "Eriksson Jesper", "bonusround": false, "wo": false},
 {"round": 3, "playerA": "Eriksson Jesper", "playerB": "Yliräisänen Janne", "winner": "Yliräisänen Janne", "bonusround": false, "wo": false},
 {"round": 4, "playerA": "Eriksson Jesper", "playerB": "Andersson Petter", "winner": "Andersson Petter", "bonusround": false, "wo": false},
