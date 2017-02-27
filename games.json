@@ -52,7 +52,7 @@
 {"round": 3, "playerA": "Pernefors Peter", "playerB": "Erland Joakim", "winner": "Erland Joakim", "bonusround": false, "wo": false},
 {"round": 4, "playerA": "Pernefors Peter", "playerB": "Fält Kari", "winner": "", "bonusround": false, "wo": false},
 {"round": 5, "playerA": "Pernefors Peter", "playerB": "Sin Mihai", "winner": "Pernefors Peter", "bonusround": false, "wo": false},
-{"round": 6, "playerA": "Pernefors Peter", "playerB": "Yliräisänen Janne", "winner": "Pernefors Peter", "bonusround": false, "wo": false},
+{"round": 6, "playerA": "Pernefors Peter", "playerB": "Yliräisänen Janne", "winner": "Yliräisänen Janne", "bonusround": false, "wo": false},
 {"round": 7, "playerA": "Pernefors Peter", "playerB": "Andersson Petter", "winner": "Pernefors Peter", "bonusround": false, "wo": false},
 
 {"round": 99, "playerA": "Olsson Björn", "playerB": "Andersson Petter", "winner": "Olsson Björn", "bonusround": true, "wo": false},
