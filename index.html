@@ -1,270 +1,365 @@
-﻿<!DOCTYPE html>
-<!--
-Mandatory games:
-1 - 2,    1 - 4,    1 - 6,    1 - 8,    1 - 10,   1 - 12,   1 - 14
-3 - 4,    3 - 6,    3 - 8,    3 - 10,   3 - 12,   3 - 14,   3 - 2
-5 - 6,    5 - 8,    5 - 10,   5 - 12,   5 - 14,   5 - 2,    5 - 4
-7 - 8,    7 - 10,   7 - 12,   7 - 14,   7 - 2,    7 - 4,    7 - 6
-9 - 10,   9 - 12,   9 - 14,   9 - 2,    9 - 4,    9 - 6,    9 - 8
-11 - 12,  11 - 14,  11 - 2,   11 - 4,   11 - 6,   11 - 8,   11 - 10
-13 - 14,  13 - 2,   13 - 4,   13 - 6,   13 - 8,   13 - 10,  13 - 12
--->
+<!DOCTYPE html>
+<html lang="en">
 
-<html>
 <head>
-  <title>Futurums bordtennisturnering</title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="taffy-min.js"></script>
-  <script type="text/javascript" src="jquery-3.1.1.min.js"></script>
-  <script type="text/javascript" src="jquery.bracket.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="jquery.bracket.min.css" />
-  <script type="text/javascript" src="la_grande_finale.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-  <style>
-    .vertical-center {
-      min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
-      min-height: 100vh; /* These two lines are counted as one :-)       */
+    <title>Futurums bordtennisturnering 2017</title>
 
-      display: flex;
-      align-items: center;
-    }
-    
-    .force_size_to_100_percent {
-      font-size: 100%;
-    }
-  </style>
-  <script>
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
 
-var playerDb = {};
-function getPlayersAjax()
-{
-  return $.getJSON( "players.json" ).done(function(json) {
-    playerDb = TAFFY(json);
-  });
-}
+    <!-- Custom CSS -->
+    <link href="css/scrolling-nav.css" rel="stylesheet">
 
-var gamesDb = {};
-function getGamesAjax()
-{
-  return $.getJSON( "games.json" ).done(function(json) {
-    gamesDb = TAFFY(json);
-  });
-}
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 
-var gameHTMLItem = '<tr>' +
-'<td>ROUND</td>' +
-'<td>PLAYERA</td>' +
-'<td>PLAYERB</td>' +
-'<td>WINNER</td>' +
-'<td>WO</td>' +
-'</tr>';
-
-$.ajaxSetup({ cache: false }); // Important to avoid local caching of old results.
-$.holdReady( true ); // Don't allow document ready event to fire before we are done with the ajax.
-$.when(getPlayersAjax(), getGamesAjax()).done(function(){
-  $.holdReady( false );
-});
-
-$(document).ready(function() {
-  var divElement = $('#paneldefault').detach();
-  playerDb().each(function(player, id)
-  {
-    divElement.clone().appendTo('.panel-group:last');
-    $('.panel-default:last a:last').attr("href", "#collapse" + player.randIndex);
-    $('.panel-default:last a:last').text(player.name);
-    $('.panel-default:last #collapse').attr("id", "collapse" + player.randIndex);
-    $('.panel-default:last #tablebody').attr("id", "tablebody" + player.randIndex);
-  });
-
-  var pointsTable = [];
-  playerDb().each(function(player, id)
-  {
-    gamesDb([{playerA:player.name}, {playerB:player.name}]).order("round").each(function(game, gameId)
-    {
-      if(game.playerA == player.name)
-      {
-        $('#tablebody' + player.randIndex).append(gameHTMLItem.replace("ROUND", game.bonusround ? "Bonus" : game.round).replace("PLAYERA",game.playerA).replace("PLAYERB", game.playerB).replace("WINNER", game.winner).replace("WO", game.wo ? "YES" : ""));
-      }
-      else
-      {
-        $('#tablebody' + player.randIndex).append(gameHTMLItem.replace("ROUND", game.bonusround ? "Bonus" : game.round).replace("PLAYERA",game.playerB).replace("PLAYERB", game.playerA).replace("WINNER", game.winner).replace("WO", game.wo ? "YES" : ""));
-      }
-    });
-    var totalPlayedOrdinaryGames = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:{'!=':""}}, {bonusround:false}, {wo:false} ).count();
-    var winningsOrdinary = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:player.name}, {bonusround:false}, {wo:false} ).count();
-    var winningsBonus = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:player.name}, {bonusround:true}, {wo:false}).count();
-    var totalPlayedBonus = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:{'!=':""}}, {bonusround:true}, {wo:false}).count();
-    var lossesBonus = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:{'!=':player.name}}, {bonusround:true}, {wo:false} ).count();
-    var winningsWO = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:player.name}, {bonusround:false}, {wo:true} ).count();
-
-    var woPoints = 0;
-    if(totalPlayedOrdinaryGames > 0 && winningsWO > 0)
-    {
-      woPoints = winningsWO * (winningsOrdinary / totalPlayedOrdinaryGames);
-    }
-    var winnings = winningsOrdinary + winningsBonus * (1/7) - lossesBonus * (1/10) + woPoints;
-    /*
-    console.log("Losses Bonus: " + player.name)
-    console.log(lossesBonus);
-    console.log("Winnings Bonus: " + player.name)
-    console.log(winningsBonus);
-    console.log("Winnings Ordinary: " + player.name)
-    console.log(winningsOrdinary);
-    */
-    $('#tablebody' + player.randIndex).append(gameHTMLItem.replace("ROUND","POÄNG TOTALT:  " + winnings.toFixed(2)).replace("PLAYERA","").replace("PLAYERB", "").replace("WINNER", "").replace("WO", ""));
-    pointsTable.push({ 'player': player.name, 'winningsOrdinary': winningsOrdinary,
-      'totalPlayedOrdinaryGames': totalPlayedOrdinaryGames, 'winningsBonus': winningsBonus,
-      'totalPlayedBonus': totalPlayedBonus, 'winnings': winnings});
-  });
-
-  pointsTable.sort(function(a, b) { return b['winnings'] - a['winnings'] });
-  for (var i = 0; i < pointsTable.length; i++) {
-    $('#tablepoints').append('<tr><td>' +pointsTable[i]['player'] +'</td><td>'
-      +pointsTable[i]['winningsOrdinary'] +'</td><td>'
-      +pointsTable[i]['totalPlayedOrdinaryGames'] +'</td><td>'
-      +pointsTable[i]['winningsBonus'] +'</td><td>'
-      +pointsTable[i]['totalPlayedBonus'] +'</td><td>'
-      +pointsTable[i]['winnings'].toFixed(2) +'</td></tr>');
-  }
-  
-  $.getJSON( "endgame.json" ).done(function(json) {
-    var dataStr = JSON.stringify(json);
-    for (var i = 0; i < pointsTable.length; i++) {
-      dataStr = dataStr.replace("Rank #" + (i+1), pointsTable[i]['player']);
-      var playerRecord = playerDb({name:pointsTable[i]['player']}).first();
-      dataStr = dataStr.replace("flag_placeholder_" + (i+1), playerRecord.company);    
-      
-    }
-    
-    customData = JSON.parse(dataStr);
-    console.log(customData);
-    
-    $(function() {
-    $('div#endgame-show').bracket({
-      init: customData,
-      disableToolbar: true,
-      disableTeamEdit: true,
-      teamWidth: 175,
-      scoreWidth: 20,
-      matchMargin: 50,
-      save: function(){}, /* without save() labels are disabled */
-      decorator: {edit: edit_fn,
-                  render: render_fn}})
-    })
-  });
-
- 
-});
-</script>
 </head>
-<body>
 
-<div class="jumbotron text-center">
-  <h1>Futurums bordtennisturnering</h1>
-  <h2>2017</h2>
-</div>
-<div class="container-fluid">
-  <h2>Regler</h2>
-  <div class="panel-heading">
-    <h4 class="panel-title">
-      <a data-toggle="collapse" href="#collapsegruppspel">Kvalspel</a>
-    </h4>
-  </div>
-  <div id="collapsegruppspel" class="panel-collapse collapse">
-    <div class="well">
-      Kvalspelet planeras pågå februari ut.
-      <br/><br/>Antal set som spelas per match är valfritt och bestäms av spelarna innan påbörjad match. En spelare måste dock utkoras som vinnare (d.v.s. inga oavgjorda matcher).
-      <br/><br/>En vunnen ordinarie match ger en poäng.
-      <br/><br/>En förlorad ordinarie match ger noll poäng.
-      <br/><br/>Bonusmatcher: Du har möjlighet att spela fler matcher än de utlottade för att på detta sätt tjäna fler poäng. Observera att vid en förlust blir du av med poäng!
-      <br/><br/>En vunnen bonusmatch ger dig 1/7 extra poäng och en förlorad blir du av med 1/10 poäng.
-      <br/><br/>Bonusmatcher får spelas med valfri spelare i turneringen, även de du mött tidigare i en ordinarie match. Du får dock endast spela bonusmatch en gång mot en och samma spelare.
-      <br/><br/>Matcherna (ordinarie och bonus) får spelas i vilken ordning man själv föredrar. Försök ändå att inte lämna alla matcher till sista veckan.
-      <br/><br/>Den som lämnar WO får noll poäng för matchen.
-      <br/><br/>Bonusmatcher kan ej rapporteras som WO.
-      <br/><br/>Det blir implicit WO vid no-show (såvida den förfördelade parten inte säger något annat).
-      <br/><br/>Den som måste avboka en inplanerad match har ansvaret för att hitta en ny speltid som passar båda. Om detta inte lyckas så blir det WO.
-      <br/><br/>Om din motspelare lämnar WO så får du snittet av dina genomförda matchers poäng. Exempel: Du har spelat 5 av 7 matcher och vann 3 av dessa 5. Dina motspelare har lämnat WO på två matcher. Din poäng kommer då bli 3/5 + 3/5 = 1.2p för dessa två WO matcher.
-      <br/><br/>Resultat rapporteras till mig: Janne, via mail eller Lync. Jag vill veta vilka som möttes och vem som vann. Setresultat är ointressant.
-    </div>  
-  </div>
-  <div class="panel-heading">
-    <h4 class="panel-title">
-      <a data-toggle="collapse" href="#collapseslutspel">Slutspel</a>
-    </h4>
-  </div>
-  <div id="collapseslutspel" class="panel-collapse collapse">
-    <div class="well">
-      Slutspelet spelas som en dubbelelimineringsturnering. 
-      <br/><br/>Detta innebär att det finns en övre och en nedre -"bracket". De som spelar i den övre får en extra chans ifall de förlorar en match genom att placeras i den nedre bracketen. Vid ytterligare en förlust (nu i den nedre bracketen) åker man dock ur turneringen, d.v.s. här gäller direkteliminering. Finalen kommer med denna spelvariant därför bli mellan vinnaren i den övre och den lägre bracketen.
-      <br/><br/>Defaultvinster har getts till spelare som placerat sig 1-6 i kvalspelet, vilket i sin tur innebär att de 4 spelare som placerade sig sämst i kvalspelet får börja i den nedre bracketen.
-      <br/><br/>Medan kvalspelet pågår så uppdateras spelschemat löpande och räknas ut från gällande poängställning. 
-      <br/><br/>Tips! Du kan manipulera matchresultaten för att på detta sätt simulera olika scenarion (t.ex. din egen triumfartade seger). Resultaten återställs vid en omladdning av sidan.  
-    </div>
-  </div>
-  <div class="panel-heading">
-    <h4 class="panel-title">
-      <a data-toggle="collapse" href="#collapsekuriosa">Kuriosa</a>
-    </h4>
-  </div>
-  <div id="collapsekuriosa" class="panel-collapse collapse">
-    <ul class="list-group">
-        <li class="list-group-item"><iframe width="854" height="480" src="https://www.youtube.com/embed/TvOvy66PxOg" frameborder="0" allowfullscreen></iframe></li>
-    </ul>
-  </div>
-  <br/>
-  <h2>Matcher</h2>
-  <div class="panel-group">
-    <div id="paneldefault" class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          <a data-toggle="collapse" href="#collapse"></a>
-        </h4>
-      </div>
-      <div id="collapse" class="panel-collapse collapse">
-        <table class="table table-condensed">
-          <thead>
-            <tr>
-              <th>Omgång</th>
-              <th>Spelare A</th>
-              <th>Spelare B</th>
-              <th>Vinnare</th>
-              <th>WO</th>
-            </tr>
-          </thead>
-          <tbody id="tablebody">
-            <!-- Dynamic content -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-  <br/>
-  <h2>Poängtabell</h2>
-  <div class="well">
-    <table class="table table-condensed">
-      <thead>
-        <tr>
-          <th>Spelare</th>
-          <th>Vunna matcher</th>
-          <th>Spelade matcher</th>
-          <th>Vunna bonusmatcher</th>
-          <th>Spelade bonusmatcher</th>
-          <th>Poäng</th>
-        </tr>
-      </thead>
-      <tbody id="tablepoints">
-        <!-- Dynamic content -->
-      </tbody>
-    </table>
-  </div>
-  <br/>
-  <h2>Slutspel</h2>
-  <div id="endgame-show"/>
-</div>
+<!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand page-scroll" href="#page-top">Futurums bordtennisturnering</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav">
+                    <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
+                    <li class="hidden">
+                        <a class="page-scroll" href="#page-top"></a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#kvalspelsresultat">Kvalspelsresultat</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#kvalspelsmatcher">Kvalspelsmatcher</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#kvalspelsregler">Kvalspelsregler</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#slutspel">Slutspel</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#slutpelsregler">Slutspelsregler</a>
+                    </li>
+
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    
+    
+    <!-- Intro Section -->
+    <section id="intro" class="intro-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Futurums bordtennisturnering 2017</h1>
+                    <!--p><strong>Slutspelet har nu</strong></p>
+                    <a class="btn btn-default page-scroll" href="#about">Slutspel!</a-->
+                </div>
+            </div>
+        </div>
+    </section>
+
+   
+    <!-- Kvalspelsresultat Section -->
+    <section id="kvalspelsresultat" class="kvalspelsresultat-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                  <h1>Kvalspelsresultat (slutresultat)</h1>
+                  <br/>
+                  <div class="" style="text-align:left">
+                    <table class="table table-condensed">
+                      <thead>
+                        <tr>
+                          <th>Spelare</th>
+                          <th>Vunna matcher</th>
+                          <th>Spelade matcher</th>
+                          <th>Vunna bonusmatcher</th>
+                          <th>Spelade bonusmatcher</th>
+                          <th>Poäng</th>
+                        </tr>
+                      </thead>
+                      <tbody id="tablepoints">
+                        <!-- Dynamic content -->
+                      </tbody>
+                    </table>
+                  </div>
+                 
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Kvalspelsmatcher section -->
+    <section id="kvalspelsmatcher" class="kvalspelsmatcher-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                  <h1>Kvalspelsmatcher (slutresultat)</h1>
+                  <br/>
+                  <div class="panel-group" style="text-align:left">
+                    <div id="paneldefault" class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                          <a data-toggle="collapse" href="#collapse"></a>
+                        </h4>
+                      </div>
+                      <div id="collapse" class="panel-collapse collapse in">
+                        <table class="table table-condensed">
+                          <thead>
+                            <tr>
+                              <th>Omgång</th>
+                              <th>Spelare A</th>
+                              <th>Spelare B</th>
+                              <th>Vinnare</th>
+                              <th>WO</th>
+                            </tr>
+                          </thead>
+                          <tbody id="tablebody">
+                            <!-- Dynamic content -->
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <!-- Kvalspelsregler -->
+    <section id="kvalspelsregler" class="regler-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                  <h1>Kvalspelsregler</h1>
+                  <br/>
+                  <div style="text-align:left">
+                    <ul>
+                      <li>Kvalspelet planeras pågå februari ut.</li>
+                      <li>Antal set som spelas per match är valfritt och bestäms av spelarna innan påbörjad match. En spelare måste dock utkoras som vinnare (d.v.s. inga oavgjorda matcher).</li>
+                      <li>En vunnen ordinarie match ger en poäng.</li>
+                      <li>En förlorad ordinarie match ger noll poäng.</li>
+                      <li>Bonusmatcher: Du har möjlighet att spela fler matcher än de utlottade för att på detta sätt tjäna fler poäng. Observera att vid en förlust blir du av med poäng!</li>
+                      <li>En vunnen bonusmatch ger dig 1/7 extra poäng och en förlorad blir du av med 1/10 poäng.</li>
+                      <li>Bonusmatcher får spelas med valfri spelare i turneringen, även de du mött tidigare i en ordinarie match. Du får dock endast spela bonusmatch en gång mot en och samma spelare.</li>
+                      <li>Matcherna (ordinarie och bonus) får spelas i vilken ordning man själv föredrar. Försök ändå att inte lämna alla matcher till sista veckan.</li>
+                      <li>Den som lämnar WO får noll poäng för matchen.</li>
+                      <li>Bonusmatcher kan ej rapporteras som WO.</li>
+                      <li>Det blir implicit WO vid no-show (såvida den förfördelade parten inte säger något annat).</li>
+                      <li>Den som måste avboka en inplanerad match har ansvaret för att hitta en ny speltid som passar båda. Om detta inte lyckas så blir det WO.</li>
+                      <li>Om din motspelare lämnar WO så får du snittet av dina genomförda matchers poäng. Exempel: Du har spelat 5 av 7 matcher och vann 3 av dessa 5. Dina motspelare har lämnat WO på två matcher. Din poäng kommer då bli 3/5 + 3/5 = 1.2p för dessa två WO matcher.</li>
+                      <li>Resultat rapporteras till mig: Janne, via mail eller Lync. Jag vill veta vilka som möttes och vem som vann. Setresultat är ointressant.</li>
+                    </ul>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <!-- Services Section -->
+    <section id="slutspel" class="slutspel-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Slutspel</h1>
+                    <br/>
+                    <div id="endgame-show"/>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <!-- Slutspelsregler -->
+    <section id="slutpelsregler" class="regler-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                  <h1>Slutspelsregler</h1>
+                  <br/>
+                  <div style="text-align:left">
+                    <ul>
+                      <li>Slutspelet spelas som en dubbelelimineringsturnering.</li>
+                      <li>Detta innebär att det finns en övre och en nedre -"bracket". De som spelar i den övre får en extra chans ifall de förlorar en match genom att placeras i den nedre bracketen. Vid ytterligare en förlust (nu i den nedre bracketen) åker man dock ur turneringen, d.v.s. här gäller direkteliminering. Finalen kommer med denna spelvariant därför bli mellan vinnaren i den övre och den lägre bracketen.</li>
+                      <li>Defaultvinster har getts till spelare som placerat sig 1-6 i kvalspelet, vilket i sin tur innebär att de 4 spelare som placerade sig sämst i kvalspelet får börja i den nedre bracketen.</li>
+                      <li>Medan kvalspelet pågår så uppdateras spelschemat löpande och räknas ut från gällande poängställning.</li>
+                      <li>Tips! Du kan manipulera matchresultaten för att på detta sätt simulera olika scenarion (t.ex. din egen triumfartade seger). Resultaten återställs vid en omladdning av sidan.</li>
+                    </ul>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Scrolling Nav JavaScript -->
+    <script src="js/jquery.easing.min.js"></script>
+    <script src="js/scrolling-nav.js"></script>
+    <script type="text/javascript" src="taffy-min.js"></script>
+    <script type="text/javascript" src="jquery.bracket.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="jquery.bracket.min.css" />
+    <script type="text/javascript" src="la_grande_finale.js"></script>
+
+
+    <script>
+
+    var playerDb = {};
+    function getPlayersAjax()
+    {
+      return $.getJSON( "players.json" ).done(function(json) {
+        playerDb = TAFFY(json);
+      });
+    }
+
+    var gamesDb = {};
+    function getGamesAjax()
+    {
+      return $.getJSON( "games.json" ).done(function(json) {
+        gamesDb = TAFFY(json);
+      });
+    }
+
+    var gameHTMLItem = '<tr>' +
+    '<td>ROUND</td>' +
+    '<td>PLAYERA</td>' +
+    '<td>PLAYERB</td>' +
+    '<td>WINNER</td>' +
+    '<td>WO</td>' +
+    '</tr>';
+
+    $.ajaxSetup({ cache: false }); // Important to avoid local caching of old results.
+    $.holdReady( true ); // Don't allow document ready event to fire before we are done with the ajax.
+    $.when(getPlayersAjax(), getGamesAjax()).done(function(){
+      $.holdReady( false );
+    });
+
+    $(document).ready(function() {
+      var divElement = $('#paneldefault').detach();
+      playerDb().each(function(player, id)
+      {
+        divElement.clone().appendTo('.panel-group:last');
+        $('.panel-default:last a:last').attr("href", "#collapse" + player.randIndex);
+        $('.panel-default:last a:last').text(player.name);
+        $('.panel-default:last #collapse').attr("id", "collapse" + player.randIndex);
+        $('.panel-default:last #tablebody').attr("id", "tablebody" + player.randIndex);
+      });
+
+      var pointsTable = [];
+      playerDb().each(function(player, id)
+      {
+        gamesDb([{playerA:player.name}, {playerB:player.name}]).order("round").each(function(game, gameId)
+        {
+          if(game.playerA == player.name)
+          {
+            $('#tablebody' + player.randIndex).append(gameHTMLItem.replace("ROUND", game.bonusround ? "Bonus" : game.round).replace("PLAYERA",game.playerA).replace("PLAYERB", game.playerB).replace("WINNER", game.winner).replace("WO", game.wo ? "YES" : ""));
+          }
+          else
+          {
+            $('#tablebody' + player.randIndex).append(gameHTMLItem.replace("ROUND", game.bonusround ? "Bonus" : game.round).replace("PLAYERA",game.playerB).replace("PLAYERB", game.playerA).replace("WINNER", game.winner).replace("WO", game.wo ? "YES" : ""));
+          }
+        });
+        var totalPlayedOrdinaryGames = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:{'!=':""}}, {bonusround:false}, {wo:false} ).count();
+        var winningsOrdinary = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:player.name}, {bonusround:false}, {wo:false} ).count();
+        var winningsBonus = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:player.name}, {bonusround:true}, {wo:false}).count();
+        var totalPlayedBonus = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:{'!=':""}}, {bonusround:true}, {wo:false}).count();
+        var lossesBonus = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:{'!=':player.name}}, {bonusround:true}, {wo:false} ).count();
+        var winningsWO = gamesDb([{playerA: player.name}, {playerB:player.name}], {winner:player.name}, {bonusround:false}, {wo:true} ).count();
+
+        var woPoints = 0;
+        if(totalPlayedOrdinaryGames > 0 && winningsWO > 0)
+        {
+          woPoints = winningsWO * (winningsOrdinary / totalPlayedOrdinaryGames);
+        }
+        var winnings = winningsOrdinary + winningsBonus * (1/7) - lossesBonus * (1/10) + woPoints;
+        /*
+        console.log("Losses Bonus: " + player.name)
+        console.log(lossesBonus);
+        console.log("Winnings Bonus: " + player.name)
+        console.log(winningsBonus);
+        console.log("Winnings Ordinary: " + player.name)
+        console.log(winningsOrdinary);
+        */
+        $('#tablebody' + player.randIndex).append(gameHTMLItem.replace("ROUND","POÄNG TOTALT:  " + winnings.toFixed(2)).replace("PLAYERA","").replace("PLAYERB", "").replace("WINNER", "").replace("WO", ""));
+        pointsTable.push({ 'player': player.name, 'winningsOrdinary': winningsOrdinary,
+          'totalPlayedOrdinaryGames': totalPlayedOrdinaryGames, 'winningsBonus': winningsBonus,
+          'totalPlayedBonus': totalPlayedBonus, 'winnings': winnings});
+      });
+
+      pointsTable.sort(function(a, b) { return b['winnings'] - a['winnings'] });
+      for (var i = 0; i < pointsTable.length; i++) {
+        $('#tablepoints').append('<tr><td>' +pointsTable[i]['player'] +'</td><td>'
+          +pointsTable[i]['winningsOrdinary'] +'</td><td>'
+          +pointsTable[i]['totalPlayedOrdinaryGames'] +'</td><td>'
+          +pointsTable[i]['winningsBonus'] +'</td><td>'
+          +pointsTable[i]['totalPlayedBonus'] +'</td><td>'
+          +pointsTable[i]['winnings'].toFixed(2) +'</td></tr>');
+      }
+      
+      $.getJSON( "endgame.json" ).done(function(json) {
+        var dataStr = JSON.stringify(json);
+        for (var i = 0; i < pointsTable.length; i++) {
+          dataStr = dataStr.replace("Rank #" + (i+1), pointsTable[i]['player']);
+          var playerRecord = playerDb({name:pointsTable[i]['player']}).first();
+          dataStr = dataStr.replace("flag_placeholder_" + (i+1), playerRecord.company);    
+          
+        }
+        
+        customData = JSON.parse(dataStr);
+        console.log(customData);
+        
+        $(function() {
+        $('div#endgame-show').bracket({
+          init: customData,
+          disableToolbar: true,
+          disableTeamEdit: true,
+          teamWidth: 175,
+          scoreWidth: 20,
+          matchMargin: 50,
+          save: function(){}, /* without save() labels are disabled */
+          decorator: {edit: edit_fn,
+                      render: render_fn}})
+        })
+      });
+    });
+</script>
 </body>
+
 </html>
